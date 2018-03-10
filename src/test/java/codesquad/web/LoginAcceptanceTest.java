@@ -35,8 +35,7 @@ public class LoginAcceptanceTest extends AcceptanceTest{
 		htmlFormDataBuilder.addParameter("password", password);
 		
 		HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
-		ResponseEntity<String> response = template().postForEntity("/users", request, String.class);
-//		UserService.login(userId, password);
+		ResponseEntity<String> response = template().postForEntity("/users/login", request, String.class);
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertNotNull(userRepository.findByUserId(userId));
