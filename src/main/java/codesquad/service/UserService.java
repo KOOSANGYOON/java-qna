@@ -1,5 +1,7 @@
 package codesquad.service;
 
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -43,6 +45,14 @@ public class UserService {
 	}
 
 	public User login(String userId, String password) throws UnAuthenticationException {
-		return userRepository.findByUserId(userId).orElseThrow(UnAuthenticationException::new);
+		System.out.println("============ access ID : " + userId + " | access PASSWORD : " + password + " ============");
+		User user = userRepository.findByUserId(userId).orElseThrow(UnAuthenticationException::new);
+		
+		if (!user.matchPassword(password)) {
+			throw new UnAuthenticationException();
+		}
+		
+		System.out.println("========== Login Success!! User is " + user + " =============");
+		return user;
 	}
 }

@@ -1,11 +1,14 @@
 package codesquad.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +21,7 @@ import codesquad.UnAuthenticationException;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.UserDto;
+import codesquad.security.HttpSessionUtils;
 import codesquad.security.LoginUser;
 import codesquad.service.UserService;
 
@@ -61,8 +65,15 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public String login(UserDto target) throws UnAuthenticationException {
-		userService.login(target.getUserId(), target.getPassword());
+	public String login(UserDto target, HttpSession session) throws UnAuthenticationException {
+		System.out.println("login ID : " + target.getUserId() + " | login PASSWORD : " + target.getPassword());
+		try {
+			User loginUser = userService.login(target.getUserId(), target.getPassword());
+			session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
+		}catch (UnAuthenticationException e) {
+			System.out.println("=============================== <ERROR> : login user is null ===============================");
+			return "redirect:/login";
+		}
 		return "redirect:/users";
 	}
 }
