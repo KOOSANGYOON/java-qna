@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -16,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
+import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
+import codesquad.dto.QuestionDto;
 import support.test.AcceptanceTest;
 
 public class QuestionAcceptanceTest extends AcceptanceTest{
@@ -35,15 +38,15 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 	@Test
 	public void create() throws Exception {
 		HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm();
-//		String userId = "testuser";
-		htmlFormDataBuilder.addQuestion();
+		htmlFormDataBuilder.addSampleQuestion();
 		HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
 
-		ResponseEntity<String> response = template().postForEntity("/questions/createQna", request, String.class);
+		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/questions/create", request, String.class);
+		log.debug("============= question : " + request.toString() + " =============");
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-//		assertNotNull(userRepository.findByUserId(userId));
-		assertThat(response.getHeaders().getLocation().getPath(), is("/users"));
+		assertEquals(1, questionRepository.count());
+		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
 	}
 
 }
