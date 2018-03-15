@@ -57,6 +57,12 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         this.title = title;
         this.contents = contents;
     }
+    
+    //임의로 만든 수정기능.
+    public void update(String title, String contents) {
+		this.title = title;
+		this.contents = contents;
+	}
 
     public String getTitle() {
         return title;

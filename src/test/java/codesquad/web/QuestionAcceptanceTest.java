@@ -42,11 +42,9 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 		HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
 
 		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/questions/create", request, String.class);
-		log.debug("============= question : " + request.toString() + " =============");
 
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertEquals(1, questionRepository.count());
 		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
 	}
-
 }
