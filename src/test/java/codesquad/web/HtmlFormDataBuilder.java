@@ -25,6 +25,14 @@ public class HtmlFormDataBuilder {
 	public HttpEntity<MultiValueMap<String, Object>> build() {
 		return new HttpEntity<MultiValueMap<String, Object>>(params, headers);
 	}
+	
+	public HtmlFormDataBuilder addQuestion() {
+		addParameter("title", "I have a questions");
+		addParameter("contents", "Coding is too hard to learn..");
+		addParameter("writer", "자바지기");
+
+		return this;
+	}
 
 	public HtmlFormDataBuilder addUser(String userId) {
 		addParameter("userId", userId);

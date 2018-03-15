@@ -63,6 +63,11 @@ public class UserController {
 		userService.update(loginUser, id, target);
 		return "redirect:/users";
 	}
+	
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		return "/user/login";
+	}
 
 	@PostMapping("/login")
 	public String login(UserDto target, HttpSession session) throws UnAuthenticationException {
@@ -72,7 +77,7 @@ public class UserController {
 			session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
 		}catch (UnAuthenticationException e) {
 			System.out.println("=============================== <ERROR> : login user is null ===============================");
-			return "redirect:/login";
+			return "redirect:/users/loginForm";
 		}
 		return "redirect:/users";
 	}
