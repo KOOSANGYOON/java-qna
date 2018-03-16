@@ -48,7 +48,10 @@ public class QnaService {
 	@Transactional
 	public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
 		Question question = questionRepository.findOne(questionId);
-		questionRepository.delete(question);
+		if (!question.isDeleted()) {
+			question.deleteQuestion();
+		}
+//		questionRepository.delete(question);		삭제를 담당했던 부분. question 의 deleted 상태를 true 로 바꿔줌으로 대체했다. 추 후 삭제할 주석.
 		return;
 	}
 
