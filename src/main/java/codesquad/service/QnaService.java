@@ -41,15 +41,14 @@ public class QnaService {
 	}
 
 	public Question update(User loginUser, long id, Question updatedQuestion) throws CannotDeleteException {
-		// TODO 수정 기능 구현
 		questionRepository.save(updatedQuestion);
 		return updatedQuestion;
 	}
 
 	@Transactional
 	public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
-		// TODO 삭제 기능 구현
-		questionRepository.delete(questionId);
+		Question question = questionRepository.findOne(questionId);
+		questionRepository.delete(question);
 		return;
 	}
 
