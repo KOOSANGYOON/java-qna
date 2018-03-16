@@ -59,12 +59,9 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		this.contents = contents;
 	}
 
-	//임의로 만든 수정기능.
-	public void update(User user, String title, String contents) {
-		if (this.isOwner(user)) {
-			this.title = title;
-			this.contents = contents;
-		}
+	public void update(String title, String contents) {
+		this.title = title;
+		this.contents = contents;
 	}
 
 	public String getTitle() {
@@ -95,11 +92,11 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 	public boolean isDeleted() {
 		return deleted;
 	}
-	
+
 	public void deleteQuestion() {
 		this.deleted = true;
 	}
-	
+
 	@Override
 	public String generateUrl() {
 		return String.format("/questions/%d", getId());

@@ -78,10 +78,13 @@ public class QuestionController {
 	@PutMapping("/{id}")
 	public String update(@PathVariable Long id, @LoginUser User loginUser, String title, String contents, Model model) throws CannotDeleteException {
 		Question question = qnaService.findById(id);
-		question.update(loginUser, title, contents);
+		if (!question.isOwner(loginUser)) {
+			log.debug("권한이 없습니다.");
+			return "redirect:/questions/{id}";
+		}
+		question.update(title, contents);
 		question = qnaService.update(loginUser, id, question);
 		model.addAttribute("question", question);
-		
 		return "redirect:/questions/{id}";
 	}
 	
