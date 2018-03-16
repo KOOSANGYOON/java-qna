@@ -54,12 +54,19 @@ public class QuestionController {
 		return "/qna/show";
 	}
 	
+	@GetMapping("/{id}/updateFail")
+	public String updateFail(@PathVariable Long id, Model model) {
+		model.addAttribute("errorMessage", "수정 권한이 없습니다.");
+		model.addAttribute("question", qnaService.findById(id));
+		return "/qna/updateFail";
+	}
+	
 	@GetMapping("/{id}/form")
 	public String updateForm(@PathVariable Long id, @LoginUser User loginUser, Model model) {
 		Question question = qnaService.findById(id);
 		if (!question.isOwner(loginUser)) {
 			log.debug("본인의 글만 수정할 수 있습니다.");
-			return "redirect:/questions/{id}";
+			return "redirect:/questions/{id}/updateFail";
 		}
 		
 		model.addAttribute("question", question);
