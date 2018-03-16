@@ -32,6 +32,11 @@ public class QuestionController {
 	@Resource(name = "qnaService")
 	private QnaService qnaService;
 	
+	@GetMapping("")
+	public String questionsHome() {
+		return "/home";
+	}
+	
 	@GetMapping("/form")
 	public String form() {
 		return "/qna/form";
