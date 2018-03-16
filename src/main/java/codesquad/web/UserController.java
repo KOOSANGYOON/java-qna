@@ -68,6 +68,12 @@ public class UserController {
 	public String loginForm() {
 		return "/user/login";
 	}
+	
+	@GetMapping("/loginFailed")
+	public String loginFailed(Model model) {
+		model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");
+		return "/user/login_failed";
+	}
 
 	@PostMapping("/login")
 	public String login(UserDto target, HttpSession session) throws UnAuthenticationException {
@@ -76,8 +82,8 @@ public class UserController {
 			User loginUser = userService.login(target.getUserId(), target.getPassword());
 			session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
 		}catch (UnAuthenticationException e) {
-			System.out.println("=============================== <ERROR> : login user is null ===============================");
-			return "redirect:/users/loginForm";
+			log.debug("=============================== <ERROR> : login error ===============================");
+			return "redirect:/users/loginFailed";
 		}
 		return "redirect:/users";
 	}
