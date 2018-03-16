@@ -63,7 +63,7 @@ public class UserController {
 		userService.update(loginUser, id, target);
 		return "redirect:/users";
 	}
-	
+  
 	@GetMapping("/loginForm")
 	public String loginForm() {
 		return "/user/login";
@@ -94,5 +94,10 @@ public class UserController {
 		log.debug("======== Success to LOGOUT!! ========");
 		
 		return "redirect:/";
+	}
+			System.out.println("=============================== <ERROR> : login user is null ===============================");
+			return "redirect:/login";
+		}
+		return "redirect:/users";
 	}
 }
