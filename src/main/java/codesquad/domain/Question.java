@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -16,12 +18,19 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import codesquad.dto.QuestionDto;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
 
 @Entity
 public class Question extends AbstractEntity implements UrlGeneratable {
+//	@Id
+//	@GeneratedValue
+//	@JsonProperty
+//	private long id;
+	
     @Size(min = 3, max = 100)
     @Column(length = 100, nullable = false)
     private String title;
@@ -48,6 +57,12 @@ public class Question extends AbstractEntity implements UrlGeneratable {
         this.title = title;
         this.contents = contents;
     }
+    
+    //임의로 만든 수정기능.
+    public void update(String title, String contents) {
+		this.title = title;
+		this.contents = contents;
+	}
 
     public String getTitle() {
         return title;
