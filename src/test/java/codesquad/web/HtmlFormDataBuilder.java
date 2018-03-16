@@ -34,8 +34,6 @@ public class HtmlFormDataBuilder {
 	}
 
 	public HtmlFormDataBuilder addSampleUser(String userId) {
-
-	public HtmlFormDataBuilder addUser(String userId) {
 		addParameter("userId", userId);
 		addParameter("password", "password");
 		addParameter("name", "자바지기");
