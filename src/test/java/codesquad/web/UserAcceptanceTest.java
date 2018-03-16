@@ -44,7 +44,7 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
 		htmlFormDataBuilder.addSampleUser(userId);
 
-		htmlFormDataBuilder.addUser(userId);
+		htmlFormDataBuilder.addSampleUser(userId);
 
 		HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
 
