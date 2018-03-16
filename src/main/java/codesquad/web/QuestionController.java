@@ -80,6 +80,14 @@ public class QuestionController {
 		question = qnaService.update(loginUser, id, question);
 		model.addAttribute("question", question);
 		
-		return "redirect:/{id}";
+		return "redirect:/questions/{id}";
+	}
+	
+	@PostMapping("/questions/{{id}}/delete")
+	public String delete(@PathVariable Long id, @LoginUser User loginUser) throws CannotDeleteException {
+		System.out.println("========================================START");
+		qnaService.deleteQuestion(loginUser, id);
+		System.out.println("========================================END");
+		return "redirect:/questions";
 	}
 }
