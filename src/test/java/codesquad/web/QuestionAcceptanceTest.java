@@ -23,7 +23,7 @@ import codesquad.domain.User;
 import codesquad.dto.QuestionDto;
 import support.test.AcceptanceTest;
 
-public class QuestionAcceptanceTest extends AcceptanceTest{
+public class QuestionAcceptanceTest extends AcceptanceTest{		//merge 되었는지 확인을 위한 주석입니다.
 	private static final Logger log = LoggerFactory.getLogger(QuestionAcceptanceTest.class);
 
 	@Autowired
