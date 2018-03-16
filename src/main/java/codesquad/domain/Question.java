@@ -20,90 +20,93 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codesquad.UnAuthenticationException;
 import codesquad.dto.QuestionDto;
 import support.domain.AbstractEntity;
 import support.domain.UrlGeneratable;
 
 @Entity
 public class Question extends AbstractEntity implements UrlGeneratable {
-//	@Id
-//	@GeneratedValue
-//	@JsonProperty
-//	private long id;
-	
-    @Size(min = 3, max = 100)
-    @Column(length = 100, nullable = false)
-    private String title;
+	//	@Id
+	//	@GeneratedValue
+	//	@JsonProperty
+	//	private long id;
 
-    @Size(min = 3)
-    @Lob
-    private String contents;
+	@Size(min = 3, max = 100)
+	@Column(length = 100, nullable = false)
+	private String title;
 
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
-    private User writer;
+	@Size(min = 3)
+	@Lob
+	private String contents;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    @Where(clause = "deleted = false")
-    @OrderBy("id ASC")
-    private List<Answer> answers = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+	private User writer;
 
-    private boolean deleted = false;
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+	@Where(clause = "deleted = false")
+	@OrderBy("id ASC")
+	private List<Answer> answers = new ArrayList<>();
 
-    public Question() {
-    }
+	private boolean deleted = false;
 
-    public Question(String title, String contents) {
-        this.title = title;
-        this.contents = contents;
-    }
-    
-    //임의로 만든 수정기능.
-    public void update(String title, String contents) {
+	public Question() {
+	}
+
+	public Question(String title, String contents) {
 		this.title = title;
 		this.contents = contents;
 	}
 
-    public String getTitle() {
-        return title;
-    }
+	//임의로 만든 수정기능.
+	public void update(User user, String title, String contents) {
+		if (this.isOwner(user)) {
+			this.title = title;
+			this.contents = contents;
+		}
+	}
 
-    public String getContents() {
-        return contents;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public User getWriter() {
-        return writer;
-    }
+	public String getContents() {
+		return contents;
+	}
 
-    public void writeBy(User loginUser) {
-        this.writer = loginUser;
-    }
+	public User getWriter() {
+		return writer;
+	}
 
-    public void addAnswer(Answer answer) {
-        answer.toQuestion(this);
-        answers.add(answer);
-    }
+	public void writeBy(User loginUser) {
+		this.writer = loginUser;
+	}
 
-    public boolean isOwner(User loginUser) {
-        return writer.equals(loginUser);
-    }
+	public void addAnswer(Answer answer) {
+		answer.toQuestion(this);
+		answers.add(answer);
+	}
 
-    public boolean isDeleted() {
-        return deleted;
-    }
+	public boolean isOwner(User loginUser) {
+		return writer.equals(loginUser);
+	}
 
-    @Override
-    public String generateUrl() {
-        return String.format("/questions/%d", getId());
-    }
+	public boolean isDeleted() {
+		return deleted;
+	}
 
-    public QuestionDto toQuestionDto() {
-        return new QuestionDto(getId(), this.title, this.contents);
-    }
+	@Override
+	public String generateUrl() {
+		return String.format("/questions/%d", getId());
+	}
 
-    @Override
-    public String toString() {
-        return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
-    }
+	public QuestionDto toQuestionDto() {
+		return new QuestionDto(getId(), this.title, this.contents);
+	}
+
+	@Override
+	public String toString() {
+		return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
+	}
 }
