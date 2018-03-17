@@ -65,7 +65,6 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 	
 	@Test
 	public void updateForm_no_login() throws Exception {
-//		ResponseEntity<String> createResponse = create();
 		Long questionId = createQuestion();
 		ResponseEntity<String> response = template().getForEntity(String.format("/questions/%d/form", questionId), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
