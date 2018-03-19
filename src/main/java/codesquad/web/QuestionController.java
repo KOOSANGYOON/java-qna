@@ -90,9 +90,12 @@ public class QuestionController {
 	
 	@DeleteMapping("/{id}")
 	public String delete(@PathVariable Long id, @LoginUser User loginUser) throws CannotDeleteException {
-		System.out.println("========================================START");
+		Question question = qnaService.findById(id);
+		if (!question.isOwner(loginUser)) {
+			log.debug("권한이 없습니다.");
+			return "redirect:/questions/{id}";
+		}
 		qnaService.deleteQuestion(loginUser, id);
-		System.out.println("========================================END");
 		return "redirect:/";
 	}
 }

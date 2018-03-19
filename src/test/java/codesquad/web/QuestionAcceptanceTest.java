@@ -24,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
 import codesquad.domain.User;
+import codesquad.domain.UserRepository;
 import codesquad.dto.QuestionDto;
 import support.test.AcceptanceTest;
 
@@ -33,10 +34,17 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 	@Autowired
 	private QuestionRepository questionRepository;
 
-	public Long createQuestion() throws Exception {
+	public Question createQuestion(User user) throws Exception {
+		Question question = new Question("question1", "This is my question.");
+		question.writeBy(user);
+		questionRepository.save(question);
+		return question;
+	}
+	
+	public Question createQuestion() throws Exception {
 		Question question = new Question("question1", "This is my question.");
 		questionRepository.save(question);
-		return question.getId();
+		return question;
 	}
 	
 	@Test
@@ -65,19 +73,19 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 	
 	@Test
 	public void updateForm_no_login() throws Exception {
-		Long questionId = createQuestion();
+		Long questionId = createQuestion().getId();
 		ResponseEntity<String> response = template().getForEntity(String.format("/questions/%d/form", questionId), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
 	@Test
 	public void updateForm_login() throws Exception {
-//		ResponseEntity<String> createResponse = create();
-		Long questionId = createQuestion();
 		User loginUser = defaultUser();
+		Question question = createQuestion(loginUser);
 		ResponseEntity<String> response = basicAuthTemplate(loginUser)
-				.getForEntity(String.format("/questions/%d/form", questionId), String.class);
+				.getForEntity(String.format("/questions/%d/form", question.getId()), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().contains(question.getContents()), is(true));
 	}
 	
 	@Test
