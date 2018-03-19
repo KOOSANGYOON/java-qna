@@ -80,7 +80,7 @@ public class QuestionController {
 		Question question = qnaService.findById(id);
 		if (!question.isOwner(loginUser)) {
 			log.debug("권한이 없습니다.");
-			return "redirect:/questions/{id}";
+			return "redirect:/questions/{id}/updateFail";
 		}
 		question.update(title, contents);
 		question = qnaService.update(loginUser, id, question);
@@ -93,7 +93,7 @@ public class QuestionController {
 		Question question = qnaService.findById(id);
 		if (!question.isOwner(loginUser)) {
 			log.debug("권한이 없습니다.");
-			return "redirect:/questions/{id}";
+			return "redirect:/questions/{id}/updateFail";
 		}
 		qnaService.deleteQuestion(loginUser, id);
 		return "redirect:/";

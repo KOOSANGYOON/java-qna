@@ -116,10 +116,35 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 		assertTrue(response.getHeaders().getLocation().getPath().startsWith("/questions"));
 	}
 	
-//	@Test
-//	public void delete() throws Exception {
-//		User loginUser = defaultUser();
-//		Question question = createQuestion(loginUser);
-//		ResponseEntity<String> response = 
-//	}
+	@Test
+	public void delete_no_login() throws Exception {
+		Question question = createQuestion();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+		params.add("_method", "delete");
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+		ResponseEntity<String> response = template().postForEntity(String.format("/questions/%d", questionRepository.count()), request, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+	}
+	
+	@Test
+	public void delete_login() throws Exception {
+		User loginUser = defaultUser();
+		Question question = createQuestion(loginUser);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+		params.add("_method", "delete");
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+		ResponseEntity<String> response = basicAuthTemplate(loginUser).postForEntity(String.format("/questions/%d", questionRepository.count()), request, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
+		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+	}
 }
