@@ -90,22 +90,11 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 	
 	@Test
 	public void update_no_login() throws Exception {
-//		ResponseEntity<String> createResponse = create();
-		Question question = questionRepository.findOne(questionRepository.count());
-		assertEquals(question.getTitle(), "I have a questions");
-		assertEquals(question.getContents(), "Coding is too hard to learn..");
-		
 		ResponseEntity<String> response = update(template());
-		
-		assertEquals(question.getTitle(), "testTitle");
-		assertEquals(question.getContents(), "Test file contents");
-		
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
 	private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
-//		ResponseEntity<String> createResponse = create();
-		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -115,20 +104,22 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 		params.add("title", "testTitle");
 		params.add("contents", "Test file contents.");
 		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
-
 		return template.postForEntity(String.format("/questions/%d", questionRepository.count()), request, String.class);
 	}
 
 	@Test
 	public void update() throws Exception {
-		ResponseEntity<String> response = update(basicAuthTemplate());
+		User loginUser = defaultUser();
+		Question question = createQuestion(loginUser);
+		ResponseEntity<String> response = update(basicAuthTemplate(loginUser));
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertTrue(response.getHeaders().getLocation().getPath().startsWith("/questions"));
 	}
 	
-	@Test
-	public void delete() throws Exception {
-//		ResponseEntity<String> createResponse = create();
-		
-	}
+//	@Test
+//	public void delete() throws Exception {
+//		User loginUser = defaultUser();
+//		Question question = createQuestion(loginUser);
+//		ResponseEntity<String> response = 
+//	}
 }
