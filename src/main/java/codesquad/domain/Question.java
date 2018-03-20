@@ -27,11 +27,6 @@ import support.domain.UrlGeneratable;
 
 @Entity
 public class Question extends AbstractEntity implements UrlGeneratable {
-	//	@Id
-	//	@GeneratedValue
-	//	@JsonProperty
-	//	private long id;
-
 	@Size(min = 3, max = 100)
 	@Column(length = 100, nullable = false)
 	private String title;
@@ -103,7 +98,8 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 	}
 
 	public QuestionDto toQuestionDto() {
-		return new QuestionDto(getId(), this.title, this.contents);
+//		return new QuestionDto(getId(), this.title, this.contents);
+		return new QuestionDto(this.title, this.contents);
 	}
 
 	@Override

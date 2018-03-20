@@ -16,6 +16,8 @@ import codesquad.domain.AnswerRepository;
 import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
 import codesquad.domain.User;
+import codesquad.dto.QuestionDto;
+import codesquad.dto.UserDto;
 
 @Service("qnaService")
 public class QnaService {
@@ -34,6 +36,10 @@ public class QnaService {
 		question.writeBy(loginUser);
 		log.debug("question : {}", question);
 		return questionRepository.save(question);
+	}
+	
+	public Question add(QuestionDto questionDto) {
+		return questionRepository.save(questionDto.toQuestion());
 	}
 
 	public Question findById(long id) {
