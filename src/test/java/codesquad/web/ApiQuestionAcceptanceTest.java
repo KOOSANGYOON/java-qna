@@ -1,14 +1,12 @@
 package codesquad.web;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import codesquad.domain.Question;
 import codesquad.domain.User;
 import codesquad.dto.QuestionDto;
 import support.test.AcceptanceTest;
@@ -18,11 +16,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	public void create() throws Exception {
 		QuestionDto newQuestion = createQuestionDto("Test title");
 		String location = createResource("/api/questions", newQuestion);
-//		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", newQuestion, String.class);
-//		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-//
-//		String location = response.getHeaders().getLocation().getPath(); 
-		QuestionDto dbQuestion = basicAuthTemplate().getForObject(location, QuestionDto.class);
+		QuestionDto dbQuestion = getResource(location, QuestionDto.class, defaultUser());
 		assertThat(dbQuestion.getId(), is(newQuestion.getId()));
 		assertThat(dbQuestion.getTitle(), is(newQuestion.getTitle()));
 		assertThat(dbQuestion.getContents(), is(newQuestion.getContents()));
@@ -54,7 +48,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 
 		basicAuthTemplate().put(location, updateQuestion);
 
-		QuestionDto dbQuestion = basicAuthTemplate().getForObject(location, QuestionDto.class);
+		QuestionDto dbQuestion = getResource(location, QuestionDto.class, defaultUser());
 
 		assertThat(dbQuestion.getId(), is(updateQuestion.getId()));
 		assertThat(dbQuestion.getTitle(), is(updateQuestion.getTitle()));
@@ -70,7 +64,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 		User wrongUser = new User("koo", "koosangyoon", "test", "koo@naver.com");
 		basicAuthTemplate(wrongUser).put(location, updateQuestion);
 
-		QuestionDto dbQuestion = basicAuthTemplate(defaultUser()).getForObject(location, QuestionDto.class);
+		QuestionDto dbQuestion = getResource(location, QuestionDto.class, defaultUser());
 
 		assertThat(dbQuestion.getId(), is(newQuestion.getId()));
 		assertThat(dbQuestion.getTitle(), is(newQuestion.getTitle()));
