@@ -17,10 +17,11 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	@Test
 	public void create() throws Exception {
 		QuestionDto newQuestion = createQuestionDto("Test title");
-		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", newQuestion, String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-
-		String location = response.getHeaders().getLocation().getPath(); 
+		String location = createResource("/api/questions", newQuestion);
+//		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", newQuestion, String.class);
+//		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+//
+//		String location = response.getHeaders().getLocation().getPath(); 
 		QuestionDto dbQuestion = basicAuthTemplate().getForObject(location, QuestionDto.class);
 		assertThat(dbQuestion.getId(), is(newQuestion.getId()));
 		assertThat(dbQuestion.getTitle(), is(newQuestion.getTitle()));
@@ -30,11 +31,8 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	@Test
 	public void show() throws Exception {
 		QuestionDto newQuestion = createQuestionDto("Test title");
-		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", newQuestion, String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-		String location = response.getHeaders().getLocation().getPath();  
-
-		response = basicAuthTemplate(defaultUser()).getForEntity(location, String.class);
+		String location = createResource("/api/questions", newQuestion);
+		ResponseEntity<String> response = basicAuthTemplate(defaultUser()).getForEntity(location, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 	}
 
@@ -51,11 +49,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	@Test
 	public void update() throws Exception {
 		QuestionDto newQuestion = createQuestionDto("Test title.");
-
-		ResponseEntity<String> response = basicAuthTemplate().postForEntity("/api/questions", newQuestion, String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-		String location = response.getHeaders().getLocation().getPath();
-
+		String location = createResource("/api/questions", newQuestion);
 		QuestionDto updateQuestion = createUpdatedQuestionDto("Update title.");
 
 		basicAuthTemplate().put(location, updateQuestion);
@@ -70,14 +64,10 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	@Test
 	public void update_다른_사람() throws Exception {
 		QuestionDto newQuestion = createQuestionDto("Test title.");
-
-		ResponseEntity<String> response = basicAuthTemplate(defaultUser()).postForEntity("/api/questions", newQuestion, String.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-		String location = response.getHeaders().getLocation().getPath();
-
+		String location = createResource("/api/questions", newQuestion);
+		
 		QuestionDto updateQuestion = createUpdatedQuestionDto("Update title.");
 		User wrongUser = new User("koo", "koosangyoon", "test", "koo@naver.com");
-
 		basicAuthTemplate(wrongUser).put(location, updateQuestion);
 
 		QuestionDto dbQuestion = basicAuthTemplate(defaultUser()).getForObject(location, QuestionDto.class);
