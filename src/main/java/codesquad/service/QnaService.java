@@ -38,8 +38,10 @@ public class QnaService {
 		return questionRepository.save(question);
 	}
 	
-	public Question add(QuestionDto questionDto) {
-		return questionRepository.save(questionDto.toQuestion());
+	public Question add(QuestionDto questionDto, User loginUser) {
+		Question question = questionDto.toQuestion();
+		question.writeBy(loginUser);
+		return questionRepository.save(question);
 	}
 
 	public Question findById(long id) {
@@ -47,8 +49,13 @@ public class QnaService {
 	}
 
 	public Question update(User loginUser, long id, Question updatedQuestion) throws CannotDeleteException {
-		questionRepository.save(updatedQuestion);
-		return updatedQuestion;
+		Question question = questionRepository.findOne(id);
+		
+		if (!question.isOwner(loginUser)) {
+			throw new CannotDeleteException("수정 권한이 없습니다.");
+		}
+		question.update(updatedQuestion.getTitle(), updatedQuestion.getContents());
+		return questionRepository.save(question);
 	}
 
 	@Transactional

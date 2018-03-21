@@ -20,6 +20,7 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codesquad.CannotDeleteException;
 import codesquad.UnAuthenticationException;
 import codesquad.dto.QuestionDto;
 import support.domain.AbstractEntity;
@@ -53,7 +54,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		this.title = title;
 		this.contents = contents;
 	}
-
+	
 	public void update(String title, String contents) {
 		this.title = title;
 		this.contents = contents;
