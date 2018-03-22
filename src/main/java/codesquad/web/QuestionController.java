@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.CannotDeleteException;
+import codesquad.domain.Answer;
 import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
 import codesquad.domain.User;
@@ -73,6 +74,14 @@ public class QuestionController {
 		
 		model.addAttribute("question", question);
 		return "/qna/updateForm";
+	}
+	
+	@PostMapping("/{id}/answers")
+	public String addAnswer(@PathVariable Long id, @LoginUser User loginUser, String contents) {
+		Question question = qnaService.findById(id);
+		Answer answer = new Answer(loginUser, contents);
+		question.addAnswer(answer);
+		return "redirect:/questions/{id}";
 	}
 	
 	@PutMapping("/{id}")

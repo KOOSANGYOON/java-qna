@@ -99,7 +99,6 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 	}
 
 	public QuestionDto toQuestionDto() {
-//		return new QuestionDto(getId(), this.title, this.contents);
 		return new QuestionDto(this.title, this.contents);
 	}
 

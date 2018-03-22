@@ -1,28 +1,59 @@
 package codesquad.web;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 
 import codesquad.domain.User;
-import codesquad.dto.UserDto;
+import codesquad.dto.QuestionDto;
 import support.test.AcceptanceTest;
 
 public class ApiAnswerAcceptanceTest extends AcceptanceTest{
+	private static final Logger log = LoggerFactory.getLogger(QuestionController.class);
+	
+	private QuestionDto createQuestionDto(String title) {
+		QuestionDto question = new QuestionDto(title, "This is a test question contents.");
+		return question;
+	}
+	
 	@Test
-    public void create() throws Exception {
-        UserDto newUser = createUserDto("testuser1");
-        ResponseEntity<String> response = template().postForEntity("/api/users", newUser, String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-        String location = response.getHeaders().getLocation().getPath();  
-        
-        UserDto dbUser = basicAuthTemplate(findByUserId(newUser.getUserId())).getForObject(location, UserDto.class);
-        assertThat(dbUser, is(newUser));
+    public void create() {
+		QuestionDto newQuestion = createQuestionDto("Test title");
+		String questionLocation = createResource("/api/questions", newQuestion);
+		
+		User guest = new User("guestId", "test", "guestName", "guest@naver.com");
+		String answerLocation = questionLocation + "/answers";
+//		basicAuthTemplate(guest).put(answerLocation, "First answer.");
+		
+		HtmlFormDataBuilder htmlFormDataBuilder = HtmlFormDataBuilder.urlEncodedForm();
+		htmlFormDataBuilder.addParameter("contents", "Add answer.");
+		HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
+		String contents = "First answer.";
+		ResponseEntity<String> response = basicAuthTemplate(guest).postForEntity(answerLocation, contents, String.class);
+		
+//		basicAuthTemplate().postForEntity(answerLocation, request, responseType);
+		
+		System.out.println("shit");
+//		String answerLocation = createResource(String.format("/api/questions/%d/addAnswer", newQuestion.getId()), "First answer.");
+		
+//        Answer dbAnswer = basicAuthTemplate(findByUserId(newUser.getUserId())).getForObject(location, UserDto.class);
+//        UserDto dbUser = basicAuthTemplate(findByUserId(newUser.getUserId())).getForObject(location, UserDto.class);
+//        assertThat(dbUser, is(newUser));
     }
-    
+	
+//	@Test
+//	public void create() throws Exception {
+//		QuestionDto newQuestion = createQuestionDto("Test title");
+//		String location = createResource("/api/questions", newQuestion);
+//		QuestionDto dbQuestion = getResource(location, QuestionDto.class, defaultUser());
+//		assertThat(dbQuestion.getId(), is(newQuestion.getId()));
+//		assertThat(dbQuestion.getTitle(), is(newQuestion.getTitle()));
+//		assertThat(dbQuestion.getContents(), is(newQuestion.getContents()));
+//	}
+//	
 //    @Test
 //    public void show_다른_사람() throws Exception {
 //        UserDto newUser = createUserDto("testuser2");
@@ -34,9 +65,7 @@ public class ApiAnswerAcceptanceTest extends AcceptanceTest{
 //        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 //    }
 //
-    private UserDto createUserDto(String userId) {
-        return new UserDto(userId, "password", "name", "javajigi@slipp.net");
-    }
+	
 //
 //    @Test
 //    public void update() throws Exception {

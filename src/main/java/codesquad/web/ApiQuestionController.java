@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codesquad.CannotDeleteException;
+import codesquad.UnAuthenticationException;
+import codesquad.domain.Answer;
 import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
 import codesquad.domain.User;
@@ -51,7 +53,7 @@ public class ApiQuestionController {
 		return question.toQuestionDto();
 	}
 
-	@PutMapping("{id}")
+	@PutMapping("/{id}")
 	public void update(@LoginUser User loginUser, @PathVariable long id, @Valid @RequestBody QuestionDto updatedQuestion) throws CannotDeleteException {
 		Question question = qnaService.findById(id);
 		

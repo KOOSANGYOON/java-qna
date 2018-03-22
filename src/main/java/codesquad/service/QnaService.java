@@ -76,7 +76,13 @@ public class QnaService {
 	}
 
 	public Answer addAnswer(User loginUser, long questionId, String contents) {
-		return null;
+		//TODO : loginUser 가 아니면 댓글 불가.		
+		Question question = questionRepository.findOne(questionId);
+		Answer answer = new Answer(loginUser, contents);
+		
+		question.addAnswer(answer);
+		questionRepository.save(question);
+		return answer;
 	}
 
 	public Answer deleteAnswer(User loginUser, long id) {

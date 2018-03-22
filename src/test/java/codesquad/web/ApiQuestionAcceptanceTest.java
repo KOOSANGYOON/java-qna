@@ -13,7 +13,7 @@ import support.test.AcceptanceTest;
 
 public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	@Test
-	public void create() throws Exception {
+	public void create() {
 		QuestionDto newQuestion = createQuestionDto("Test title");
 		String location = createResource("/api/questions", newQuestion);
 		QuestionDto dbQuestion = getResource(location, QuestionDto.class, defaultUser());
@@ -23,7 +23,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	}
 
 	@Test
-	public void show() throws Exception {
+	public void show() {
 		QuestionDto newQuestion = createQuestionDto("Test title");
 		String location = createResource("/api/questions", newQuestion);
 		ResponseEntity<String> response = basicAuthTemplate(defaultUser()).getForEntity(location, String.class);
@@ -41,7 +41,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	}
 
 	@Test
-	public void update() throws Exception {
+	public void update() {
 		QuestionDto newQuestion = createQuestionDto("Test title.");
 		String location = createResource("/api/questions", newQuestion);
 		QuestionDto updateQuestion = createUpdatedQuestionDto("Update title.");
@@ -56,7 +56,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 	}
 
 	@Test
-	public void update_다른_사람() throws Exception {
+	public void update_다른_사람() {
 		QuestionDto newQuestion = createQuestionDto("Test title.");
 		String location = createResource("/api/questions", newQuestion);
 		
