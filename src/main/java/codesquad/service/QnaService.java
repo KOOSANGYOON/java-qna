@@ -76,17 +76,27 @@ public class QnaService {
 	}
 
 	public Answer addAnswer(User loginUser, long questionId, String contents) {
-		//TODO : loginUser 가 아니면 댓글 불가.		
 		Question question = questionRepository.findOne(questionId);
 		Answer answer = new Answer(loginUser, contents);
 		
 		question.addAnswer(answer);
+		answerRepository.save(answer);
 		questionRepository.save(question);
+		return answer;
+	}
+	
+	public Answer updateAnswer(User loginUser, long id, String contents) {
+		Answer answer = answerRepository.findOne(id);
+		if (!answer.isOwner(loginUser)) {
+			return answer;
+		}
+		answerRepository.save(answer.update(contents));
 		return answer;
 	}
 
 	public Answer deleteAnswer(User loginUser, long id) {
-		// TODO 답변 삭제 기능 구현 
-		return null;
+		Answer answer = answerRepository.findOne(id);
+		answer.delete();
+		return answerRepository.save(answer);
 	}
 }

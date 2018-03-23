@@ -71,6 +71,15 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 	public User getWriter() {
 		return writer;
 	}
+	
+	public Answer getAnswer(Long id) {
+		for (Answer answer : answers) {
+			if (answer.getId() == id) {
+				return answer;
+			}
+		}
+		return null;
+	}
 
 	public void writeBy(User loginUser) {
 		this.writer = loginUser;
@@ -80,7 +89,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		answer.toQuestion(this);
 		answers.add(answer);
 	}
-
+	
 	public boolean isOwner(User loginUser) {
 		return writer.equals(loginUser);
 	}
