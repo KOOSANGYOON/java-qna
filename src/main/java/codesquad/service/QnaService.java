@@ -54,7 +54,7 @@ public class QnaService {
 		if (!question.isOwner(loginUser)) {
 			throw new CannotDeleteException("수정 권한이 없습니다.");
 		}
-		question.update(updatedQuestion.getTitle(), updatedQuestion.getContents());
+		question.update(loginUser, updatedQuestion.getTitle(), updatedQuestion.getContents());
 		return questionRepository.save(question);
 	}
 
@@ -96,7 +96,10 @@ public class QnaService {
 
 	public Answer deleteAnswer(User loginUser, long id) {
 		Answer answer = answerRepository.findOne(id);
-		answer.delete();
+		if (!answer.isOwner(loginUser)) {
+			return answer;
+		}
+		answer.delete(loginUser);
 		return answerRepository.save(answer);
 	}
 }

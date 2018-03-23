@@ -52,13 +52,6 @@ public class ApiAnswerController {
 	public Answer update(@LoginUser User loginUser, @PathVariable long questionId, @PathVariable long answerId, @RequestBody String contents) throws CannotDeleteException {
 		Question question = qnaService.findById(questionId);
 		Answer existingAnswer = question.getAnswer(answerId);
-		
-		if (!existingAnswer.isOwner(loginUser)) {
-			throw new CannotDeleteException("수정 권한이 없습니다.");
-		}
-		if (loginUser.equals(null)) {
-			throw new CannotDeleteException("로그인후에 이용할 수 있습니다.");
-		}
 			
 		Answer updatedAnswer = qnaService.updateAnswer(loginUser, answerId, contents);
 		
@@ -79,13 +72,6 @@ public class ApiAnswerController {
 	public Answer delete(@LoginUser User loginUser, @PathVariable long questionId, @PathVariable long answerId) throws CannotDeleteException {
 		Question question = qnaService.findById(questionId);
 		Answer existingAnswer = question.getAnswer(answerId);
-		
-		if (!existingAnswer.isOwner(loginUser)) {
-			throw new CannotDeleteException("삭제 권한이 없습니다.");
-		}
-		if (loginUser.equals(null)) {
-			throw new CannotDeleteException("로그인후에 이용할 수 있습니다.");
-		}
 		
 		Answer deletedAnswer = qnaService.deleteAnswer(loginUser, answerId);
 		

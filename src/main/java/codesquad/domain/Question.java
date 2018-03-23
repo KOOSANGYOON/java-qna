@@ -55,7 +55,10 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		this.contents = contents;
 	}
 	
-	public void update(String title, String contents) {
+	public void update(User loginUser, String title, String contents) {
+		if (!this.isOwner(loginUser)) {
+			return;
+		}
 		this.title = title;
 		this.contents = contents;
 	}

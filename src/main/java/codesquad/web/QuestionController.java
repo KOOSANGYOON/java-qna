@@ -91,7 +91,7 @@ public class QuestionController {
 			log.debug("권한이 없습니다.");
 			return "redirect:/questions/{id}/updateFail";
 		}
-		question.update(title, contents);
+		question.update(loginUser, title, contents);
 		question = qnaService.update(loginUser, id, question);
 		model.addAttribute("question", question);
 		return "redirect:/questions/{id}";
