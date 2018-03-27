@@ -93,7 +93,9 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 		
 		basicAuthTemplate().delete(location);
 		
-		Question question = questionRepository.findOne((long) 1);
+		long questionId = Long.parseLong(location.charAt(location.length() - 1) + "");
+		
+		Question question = questionRepository.findOne((long) questionId);
 		log.debug("question delete status is " + question.isDeleted());
 		assertTrue(question.isDeleted());
 	}
@@ -111,7 +113,8 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 		
 		basicAuthTemplate(defaultUser()).delete(questionLocation);
 		
-		Question question = questionRepository.findOne((long) 1);
+		long questionId = Long.parseLong(questionLocation.charAt(questionLocation.length() - 1) + "");
+		Question question = questionRepository.findOne((long) questionId);
 		log.debug("question delete status is " + question.isDeleted());
 		assertTrue(question.isDeleted());
 	}
@@ -129,7 +132,8 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 		
 		basicAuthTemplate(defaultUser()).delete(questionLocation);
 		
-		Question question = questionRepository.findOne((long) 1);
+		long questionId = Long.parseLong(questionLocation.charAt(questionLocation.length() - 1) + "");
+		Question question = questionRepository.findOne((long) questionId);
 		log.debug("question delete status is " + question.isDeleted());
 		assertFalse(question.isDeleted());
 	}
@@ -145,7 +149,8 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 		String location = createResource("/api/questions", newQuestion);
 		basicAuthTemplate(anotherUser()).delete(location);
 		
-		Question question = questionRepository.findOne((long) 1);
+		long questionId = Long.parseLong(location.charAt(location.length() - 1) + "");
+		Question question = questionRepository.findOne((long) questionId);
 		log.debug("question delete status is " + question.isDeleted());
 		assertFalse(question.isDeleted());
 	}
