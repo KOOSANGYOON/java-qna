@@ -126,7 +126,7 @@ public class ApiQuestionAcceptanceTest extends AcceptanceTest {
 		
 		String answerLocation = questionLocation + "/answers";
 		
-		Answer answer = new Answer((long) 1, defaultUser(), newQuestion.toQuestion(), "initial answer contents");
+		Answer answer = new Answer((long) 1, anotherUser(), newQuestion.toQuestion(), "initial answer contents");
 		
 		ResponseEntity<String> response = basicAuthTemplate(anotherUser()).postForEntity(answerLocation, answer, String.class);
 		

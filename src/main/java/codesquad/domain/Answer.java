@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -48,12 +50,13 @@ public class Answer extends AbstractEntity implements UrlGeneratable {
 		return this;
 	}
 	
-	public void delete(User loginUser) throws CannotDeleteException {
+	public DeleteHistory delete(User loginUser) throws CannotDeleteException {
 		if (!this.isOwner(loginUser)) {
 			throw new CannotDeleteException("댓글 삭제 권한이 없습니다. (본인의 댓글만 삭제할 수 있습니다.");
 		}
 		
 		this.deleted = true;
+		return new DeleteHistory(ContentType.ANSWER, this.getId(), this.writer, LocalDateTime.now());
 	}
 
 	public User getWriter() {

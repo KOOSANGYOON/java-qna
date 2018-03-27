@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.persistence.OrderBy;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Where;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -101,7 +103,8 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		return deleted;
 	}
 
-	public void deleteQuestion(User loginUser) throws CannotDeleteException {
+	@Transactional
+	public List<DeleteHistory> deleteQuestion(User loginUser) throws CannotDeleteException {
 		if (!this.isOwner(loginUser)) {
 			throw new CannotDeleteException("본인의 글만 삭제할 수 있습니다.");
 		}
@@ -110,30 +113,16 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 			throw new CannotDeleteException("이미 삭제된 질문입니다.");
 		}
 		
-		if (!isQuestionAndAnswerWriterSame(loginUser)) {
-			throw new CannotDeleteException("타인의 댓글이 존재하여 삭제할 수 없습니다.");
-		}
+		List<DeleteHistory> histories = new ArrayList<DeleteHistory> ();
 		
-		this.deleted = true;
 		for (Answer answer : answers) {
-			answer.delete(loginUser);
+			histories.add(answer.delete(loginUser));
 		}
+		this.deleted = true;
+		histories.add(new DeleteHistory(ContentType.QUESTION, this.getId(), this.writer, LocalDateTime.now()));
+		return histories;
 	}
 	
-	private boolean isQuestionAndAnswerWriterSame(User loginUser) {
-		if (answers.size() == 0) {
-			return true;
-		}
-		
-		boolean result = true;
-		for (Answer answer : answers) {
-			if (!answer.isOwner(loginUser)) {
-				result = false;
-			}
-		}
-		return result;
-	}
-
 	@Override
 	public String generateUrl() {
 		return String.format("/questions/%d", getId());
