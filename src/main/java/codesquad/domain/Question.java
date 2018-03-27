@@ -101,8 +101,37 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		return deleted;
 	}
 
-	public void deleteQuestion() {
+	public void deleteQuestion(User loginUser) throws CannotDeleteException {
+		if (!this.isOwner(loginUser)) {
+			throw new CannotDeleteException("본인의 글만 삭제할 수 있습니다.");
+		}
+		
+		if (this.isDeleted()) {
+			throw new CannotDeleteException("이미 삭제된 질문입니다.");
+		}
+		
+		if (!isQuestionAndAnswerWriterSame(loginUser)) {
+			throw new CannotDeleteException("타인의 댓글이 존재하여 삭제할 수 없습니다.");
+		}
+		
 		this.deleted = true;
+		for (Answer answer : answers) {
+			answer.delete(loginUser);
+		}
+	}
+	
+	private boolean isQuestionAndAnswerWriterSame(User loginUser) {
+		if (answers.size() == 0) {
+			return true;
+		}
+		
+		boolean result = true;
+		for (Answer answer : answers) {
+			if (!answer.isOwner(loginUser)) {
+				result = false;
+			}
+		}
+		return result;
 	}
 
 	@Override

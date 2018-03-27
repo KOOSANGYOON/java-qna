@@ -61,10 +61,9 @@ public class QnaService {
 	@Transactional
 	public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
 		Question question = questionRepository.findOne(questionId);
-		if (!question.isDeleted()) {
-			question.deleteQuestion();
-		}
-		return;
+		question.deleteQuestion(loginUser);
+		questionRepository.save(question);
+		log.debug("question delete status : " + question.isDeleted());
 	}
 
 	public Iterable<Question> findAll() {
@@ -94,7 +93,7 @@ public class QnaService {
 		return answer;
 	}
 
-	public Answer deleteAnswer(User loginUser, long id) {
+	public Answer deleteAnswer(User loginUser, long id) throws CannotDeleteException {
 		Answer answer = answerRepository.findOne(id);
 		if (!answer.isOwner(loginUser)) {
 			return answer;
