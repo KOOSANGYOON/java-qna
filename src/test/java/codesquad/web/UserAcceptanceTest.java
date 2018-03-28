@@ -44,11 +44,6 @@ public class UserAcceptanceTest extends AcceptanceTest {
 
 		htmlFormDataBuilder.addSampleUser(userId);
 
-<<<<<<< HEAD
-=======
-		htmlFormDataBuilder.addSampleUser(userId);
-
->>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		HttpEntity<MultiValueMap<String, Object>> request = htmlFormDataBuilder.build();
 
 		ResponseEntity<String> response = template().postForEntity("/users", request, String.class);

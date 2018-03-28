@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.CannotDeleteException;
-<<<<<<< HEAD
 import codesquad.domain.Answer;
-=======
->>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
 import codesquad.domain.User;
@@ -79,7 +76,6 @@ public class QuestionController {
 		return "/qna/updateForm";
 	}
 	
-<<<<<<< HEAD
 	@PostMapping("/{id}/answers")
 	public String addAnswer(@PathVariable Long id, @LoginUser User loginUser, String contents) {
 		Question question = qnaService.findById(id);
@@ -88,22 +84,14 @@ public class QuestionController {
 		return "redirect:/questions/{id}";
 	}
 	
-=======
->>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	@PutMapping("/{id}")
 	public String update(@PathVariable Long id, @LoginUser User loginUser, String title, String contents, Model model) throws CannotDeleteException {
 		Question question = qnaService.findById(id);
 		if (!question.isOwner(loginUser)) {
 			log.debug("권한이 없습니다.");
-<<<<<<< HEAD
 			return "redirect:/questions/{id}/updateFail";
 		}
 		question.update(loginUser, title, contents);
-=======
-			return "redirect:/questions/{id}";
-		}
-		question.update(title, contents);
->>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		question = qnaService.update(loginUser, id, question);
 		model.addAttribute("question", question);
 		return "redirect:/questions/{id}";
@@ -111,18 +99,12 @@ public class QuestionController {
 	
 	@DeleteMapping("/{id}")
 	public String delete(@PathVariable Long id, @LoginUser User loginUser) throws CannotDeleteException {
-<<<<<<< HEAD
 		Question question = qnaService.findById(id);
 		if (!question.isOwner(loginUser)) {
 			log.debug("권한이 없습니다.");
 			return "redirect:/questions/{id}/updateFail";
 		}
 		qnaService.deleteQuestion(loginUser, id);
-=======
-		System.out.println("========================================START");
-		qnaService.deleteQuestion(loginUser, id);
-		System.out.println("========================================END");
->>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		return "redirect:/";
 	}
 }
