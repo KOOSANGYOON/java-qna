@@ -24,7 +24,10 @@ import org.springframework.util.MultiValueMap;
 import codesquad.domain.Question;
 import codesquad.domain.QuestionRepository;
 import codesquad.domain.User;
+<<<<<<< HEAD
 import codesquad.domain.UserRepository;
+=======
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 import codesquad.dto.QuestionDto;
 import support.test.AcceptanceTest;
 
@@ -34,6 +37,7 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 	@Autowired
 	private QuestionRepository questionRepository;
 
+<<<<<<< HEAD
 	public Question createQuestion(User user) throws Exception {
 		Question question = new Question("question1", "This is my question.");
 		question.writeBy(user);
@@ -45,6 +49,12 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 		Question question = new Question("question1", "This is my question.");
 		questionRepository.save(question);
 		return question;
+=======
+	public Long createQuestion() throws Exception {
+		Question question = new Question("question1", "This is my question.");
+		questionRepository.save(question);
+		return question.getId();
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	}
 	
 	@Test
@@ -73,28 +83,59 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 	
 	@Test
 	public void updateForm_no_login() throws Exception {
+<<<<<<< HEAD
 		Long questionId = createQuestion().getId();
+=======
+		Long questionId = createQuestion();
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		ResponseEntity<String> response = template().getForEntity(String.format("/questions/%d/form", questionId), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
 	@Test
 	public void updateForm_login() throws Exception {
+<<<<<<< HEAD
 		User loginUser = defaultUser();
 		Question question = createQuestion(loginUser);
 		ResponseEntity<String> response = basicAuthTemplate(loginUser)
 				.getForEntity(String.format("/questions/%d/form", question.getId()), String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().contains(question.getContents()), is(true));
+=======
+//		ResponseEntity<String> createResponse = create();
+		Long questionId = createQuestion();
+		User loginUser = defaultUser();
+		ResponseEntity<String> response = basicAuthTemplate(loginUser)
+				.getForEntity(String.format("/questions/%d/form", questionId), String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	}
 	
 	@Test
 	public void update_no_login() throws Exception {
+<<<<<<< HEAD
 		ResponseEntity<String> response = update(template());
+=======
+//		ResponseEntity<String> createResponse = create();
+		Question question = questionRepository.findOne(questionRepository.count());
+		assertEquals(question.getTitle(), "I have a questions");
+		assertEquals(question.getContents(), "Coding is too hard to learn..");
+		
+		ResponseEntity<String> response = update(template());
+		
+		assertEquals(question.getTitle(), "testTitle");
+		assertEquals(question.getContents(), "Test file contents");
+		
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
 	private ResponseEntity<String> update(TestRestTemplate template) throws Exception {
+<<<<<<< HEAD
+=======
+//		ResponseEntity<String> createResponse = create();
+		
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -104,19 +145,28 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 		params.add("title", "testTitle");
 		params.add("contents", "Test file contents.");
 		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(params, headers);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		return template.postForEntity(String.format("/questions/%d", questionRepository.count()), request, String.class);
 	}
 
 	@Test
 	public void update() throws Exception {
+<<<<<<< HEAD
 		User loginUser = defaultUser();
 		Question question = createQuestion(loginUser);
 		ResponseEntity<String> response = update(basicAuthTemplate(loginUser));
+=======
+		ResponseEntity<String> response = update(basicAuthTemplate());
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertTrue(response.getHeaders().getLocation().getPath().startsWith("/questions"));
 	}
 	
 	@Test
+<<<<<<< HEAD
 	public void delete_no_login() throws Exception {
 		Question question = createQuestion();
 		
@@ -146,5 +196,10 @@ public class QuestionAcceptanceTest extends AcceptanceTest{
 		ResponseEntity<String> response = basicAuthTemplate(loginUser).postForEntity(String.format("/questions/%d", questionRepository.count()), request, String.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
 		assertThat(response.getHeaders().getLocation().getPath(), is("/"));
+=======
+	public void delete() throws Exception {
+//		ResponseEntity<String> createResponse = create();
+		
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	}
 }

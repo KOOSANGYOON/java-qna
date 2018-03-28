@@ -22,7 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+<<<<<<< HEAD
 import codesquad.CannotDeleteException;
+=======
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 import codesquad.UnAuthenticationException;
 import codesquad.dto.QuestionDto;
 import support.domain.AbstractEntity;
@@ -30,6 +33,14 @@ import support.domain.UrlGeneratable;
 
 @Entity
 public class Question extends AbstractEntity implements UrlGeneratable {
+<<<<<<< HEAD
+=======
+	//	@Id
+	//	@GeneratedValue
+	//	@JsonProperty
+	//	private long id;
+
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	@Size(min = 3, max = 100)
 	@Column(length = 100, nullable = false)
 	private String title;
@@ -56,11 +67,16 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		this.title = title;
 		this.contents = contents;
 	}
+<<<<<<< HEAD
 	
 	public void update(User loginUser, String title, String contents) {
 		if (!this.isOwner(loginUser)) {
 			return;
 		}
+=======
+
+	public void update(String title, String contents) {
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 		this.title = title;
 		this.contents = contents;
 	}
@@ -76,6 +92,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 	public User getWriter() {
 		return writer;
 	}
+<<<<<<< HEAD
 	
 	public Answer getAnswer(Long id) {
 		for (Answer answer : answers) {
@@ -85,6 +102,8 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		}
 		return null;
 	}
+=======
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 
 	public void writeBy(User loginUser) {
 		this.writer = loginUser;
@@ -94,7 +113,11 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		answer.toQuestion(this);
 		answers.add(answer);
 	}
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	public boolean isOwner(User loginUser) {
 		return writer.equals(loginUser);
 	}
@@ -103,6 +126,7 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		return deleted;
 	}
 
+<<<<<<< HEAD
 	@Transactional
 	public List<DeleteHistory> deleteQuestion(User loginUser) throws CannotDeleteException {
 		if (!this.isOwner(loginUser)) {
@@ -123,13 +147,23 @@ public class Question extends AbstractEntity implements UrlGeneratable {
 		return histories;
 	}
 	
+=======
+	public void deleteQuestion() {
+		this.deleted = true;
+	}
+
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	@Override
 	public String generateUrl() {
 		return String.format("/questions/%d", getId());
 	}
 
 	public QuestionDto toQuestionDto() {
+<<<<<<< HEAD
 		return new QuestionDto(this.title, this.contents);
+=======
+		return new QuestionDto(getId(), this.title, this.contents);
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	}
 
 	@Override

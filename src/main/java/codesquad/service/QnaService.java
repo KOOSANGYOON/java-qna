@@ -39,18 +39,22 @@ public class QnaService {
 		log.debug("question : {}", question);
 		return questionRepository.save(question);
 	}
+<<<<<<< HEAD
 	
 	public Question add(QuestionDto questionDto, User loginUser) {
 		Question question = questionDto.toQuestion();
 		question.writeBy(loginUser);
 		return questionRepository.save(question);
 	}
+=======
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 
 	public Question findById(long id) {
 		return questionRepository.findOne(id);
 	}
 
 	public Question update(User loginUser, long id, Question updatedQuestion) throws CannotDeleteException {
+<<<<<<< HEAD
 		Question question = questionRepository.findOne(id);
 		
 		if (!question.isOwner(loginUser)) {
@@ -58,15 +62,26 @@ public class QnaService {
 		}
 		question.update(loginUser, updatedQuestion.getTitle(), updatedQuestion.getContents());
 		return questionRepository.save(question);
+=======
+		questionRepository.save(updatedQuestion);
+		return updatedQuestion;
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	}
 
 	@Transactional
 	public void deleteQuestion(User loginUser, long questionId) throws CannotDeleteException {
 		Question question = questionRepository.findOne(questionId);
+<<<<<<< HEAD
 		List<DeleteHistory> histories = question.deleteQuestion(loginUser);
 		deleteHistoryService.saveAll(histories);
 		questionRepository.save(question);
 		log.debug("question delete status : " + question.isDeleted());
+=======
+		if (!question.isDeleted()) {
+			question.deleteQuestion();
+		}
+		return;
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	}
 
 	public Iterable<Question> findAll() {
@@ -78,6 +93,7 @@ public class QnaService {
 	}
 
 	public Answer addAnswer(User loginUser, long questionId, String contents) {
+<<<<<<< HEAD
 		Question question = questionRepository.findOne(questionId);
 		Answer answer = new Answer(loginUser, contents);
 		
@@ -103,5 +119,13 @@ public class QnaService {
 		}
 		answer.delete(loginUser);
 		return answerRepository.save(answer);
+=======
+		return null;
+	}
+
+	public Answer deleteAnswer(User loginUser, long id) {
+		// TODO 답변 삭제 기능 구현 
+		return null;
+>>>>>>> 606ea02d20adf35398698d9e27d08af530181aac
 	}
 }
