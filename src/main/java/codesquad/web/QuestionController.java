@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import codesquad.CannotDeleteException;
@@ -73,21 +75,24 @@ public class QuestionController {
 		return "/qna/updateForm";
 	}
 	
-	@PostMapping("/{id}/update")
+	@PutMapping("/{id}")
 	public String update(@PathVariable Long id, @LoginUser User loginUser, String title, String contents, Model model) throws CannotDeleteException {
 		Question question = qnaService.findById(id);
+		if (!question.isOwner(loginUser)) {
+			log.debug("권한이 없습니다.");
+			return "redirect:/questions/{id}";
+		}
 		question.update(title, contents);
 		question = qnaService.update(loginUser, id, question);
 		model.addAttribute("question", question);
-		
 		return "redirect:/questions/{id}";
 	}
 	
-	@PostMapping("/questions/{{id}}/delete")
+	@DeleteMapping("/{id}")
 	public String delete(@PathVariable Long id, @LoginUser User loginUser) throws CannotDeleteException {
 		System.out.println("========================================START");
 		qnaService.deleteQuestion(loginUser, id);
 		System.out.println("========================================END");
-		return "redirect:/questions";
+		return "redirect:/";
 	}
 }

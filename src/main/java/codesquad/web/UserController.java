@@ -63,12 +63,12 @@ public class UserController {
 		userService.update(loginUser, id, target);
 		return "redirect:/users";
 	}
-	
+
 	@GetMapping("/loginForm")
 	public String loginForm() {
 		return "/user/login";
 	}
-	
+
 	@GetMapping("/loginFailed")
 	public String loginFailed(Model model) {
 		model.addAttribute("errorMessage", "아이디와 비밀번호를 확인해주세요.");
@@ -87,12 +87,12 @@ public class UserController {
 		}
 		return "redirect:/users";
 	}
-	
+
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
 		log.debug("======== Success to LOGOUT!! ========");
-		
+
 		return "redirect:/";
 	}
 }
